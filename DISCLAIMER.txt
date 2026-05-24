@@ -1,0 +1,11 @@
+
+AVISO LEGAL / DISCLAIMER
+
+SwimTrack é uma aplicação de uso pessoal e académico destinada ao acompanhamento desportivo de atletas de natação.
+
+A aplicação não possui qualquer ligação oficial à Federação Portuguesa de Natação (FPN), à Associação de Natação do Distrito de Leiria (ANDL) ou ao Swimrankings.
+
+Os dados de resultados, rankings e tempos poderão ser consultados a partir de fontes públicas disponibilizadas por:
+- Swimrankings
+- Associação de Natação do Distrito de Leiria (ANDL)
+- Federação Portuguesa de Natação (FPN)
