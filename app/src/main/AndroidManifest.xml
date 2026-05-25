@@ -6,8 +6,8 @@
     <application
         android:allowBackup="true"
         android:label="SwimTrack"
-        android:icon="@mipmap/swimtrack_icon"
-        android:roundIcon="@mipmap/swimtrack_icon"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -17,7 +17,6 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
