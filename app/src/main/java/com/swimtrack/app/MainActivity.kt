@@ -163,7 +163,27 @@ class MainActivity : Activity() {
                 val url =
                     "https://www.swimrankings.net/index.php?page=athleteDetail&athleteId=$id"
 
-                val html = URL(url).readText()
+                val connection =
+                    URL(url).openConnection()
+
+                connection.setRequestProperty(
+                    "User-Agent",
+                    "Mozilla/5.0 (Android) AppleWebKit/537.36 Chrome/120 Mobile Safari/537.36"
+                )
+
+                connection.setRequestProperty(
+                    "Accept",
+                    "text/html"
+                )
+
+                connection.connectTimeout = 15000
+                connection.readTimeout = 15000
+
+                val html =
+                    connection
+                        .getInputStream()
+                        .bufferedReader()
+                        .use { it.readText() }
 
                 val nome = extrairNome(html)
                 val clube = extrairClube(html)
