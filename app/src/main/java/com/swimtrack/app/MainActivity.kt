@@ -32,7 +32,7 @@ class MainActivity : Activity() {
         content.gravity = Gravity.CENTER_HORIZONTAL
 
         val icon = ImageView(this)
-        icon.setImageResource(resources.getIdentifier("swimtrack_icon", "mipmap", packageName))
+        icon.setImageResource(resources.getIdentifier("ic_launcher", "mipmap", packageName))
         icon.layoutParams = LinearLayout.LayoutParams(220, 220)
 
         val title = TextView(this)
@@ -50,35 +50,48 @@ class MainActivity : Activity() {
         sub.gravity = Gravity.CENTER
         sub.setPadding(0, 8, 0, 22)
 
-        val date = TextView(this)
-        date.text = "🏊 Constança • Época 2025/2026"
-        date.textSize = 16f
-        date.setTypeface(Typeface.DEFAULT_BOLD)
-        date.setTextColor(yellow)
-        date.gravity = Gravity.CENTER
-        date.setPadding(18, 12, 18, 12)
-        date.setBackgroundColor(card)
+        val season = TextView(this)
+        season.text = "🏊 Constança • Época 2025/2026"
+        season.textSize = 16f
+        season.setTypeface(Typeface.DEFAULT_BOLD)
+        season.setTextColor(yellow)
+        season.gravity = Gravity.CENTER
+        season.setPadding(18, 12, 18, 12)
+        season.setBackgroundColor(card)
 
         content.addView(icon)
         content.addView(title)
         content.addView(sub)
-        content.addView(date)
+        content.addView(season)
 
         content.addView(tabs(yellow, card2, white))
-
         content.addView(stats(card, white, soft))
 
         content.addView(sectionTitle("ATLETA", yellow))
         content.addView(infoCard("Nome", "Constança", card2, white, soft))
         content.addView(infoCard("Clube", "A definir", card2, white, soft))
+        content.addView(infoCard("N.º Identificação", "A definir", card2, white, soft))
         content.addView(infoCard("Associação", "ANDL — Associação de Natação do Distrito de Leiria", card2, white, soft))
-        content.addView(infoCard("Escalão", "Juvenil — cálculo automático pela idade", card2, white, soft))
+        content.addView(infoCard("Escalão", "Cálculo automático pela idade", card2, white, soft))
+        content.addView(infoCard("Resultados relevantes", "A definir após importação do Swimrankings", card2, white, soft))
         content.addView(infoCard("Fontes", "Swimrankings • ANDL • FPN", card2, white, soft))
 
         content.addView(sectionTitle("AÇÕES", yellow))
 
+        content.addView(actionButton("📥 Importar Swimrankings", blue) {
+            Toast.makeText(this, "Importação Swimrankings será ligada na próxima fase.", Toast.LENGTH_LONG).show()
+        })
+
         content.addView(actionButton("📤 Exportar resumo WhatsApp", blue) {
-            val msg = "🏊‍♀️ SwimTrack\nAtleta: Constança\nClube: A definir\nAssociação: ANDL\nEscalão: Juvenil\n\nTempos • TAC • Evolução\n\nFontes: Swimrankings • ANDL • FPN"
+            val msg =
+                "🏊‍♀️ SwimTrack\n" +
+                "Atleta: Constança\n" +
+                "Clube: A definir\n" +
+                "N.º Identificação: A definir\n" +
+                "Associação: ANDL\n\n" +
+                "Tempos • TAC • Evolução\n\n" +
+                "Fontes: Swimrankings • ANDL • FPN"
+
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
             intent.putExtra(Intent.EXTRA_TEXT, msg)
@@ -123,9 +136,9 @@ class MainActivity : Activity() {
         box.setPadding(12, 18, 12, 18)
         box.setBackgroundColor(card)
 
-        box.addView(stat("3", "TEMPOS", white, soft), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        box.addView(stat("0", "TEMPOS", white, soft), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
         box.addView(stat("0", "TAC OK", white, soft), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-        box.addView(stat("3", "OBJETIVOS", white, soft), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        box.addView(stat("0", "OBJETIVOS", white, soft), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
 
         return box
     }
