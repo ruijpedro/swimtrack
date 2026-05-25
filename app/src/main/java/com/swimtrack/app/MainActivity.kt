@@ -21,12 +21,12 @@ class MainActivity : Activity() {
     private lateinit var tabEvolucao: TextView
     private lateinit var tabMais: TextView
 
-    private val bg = Color.rgb(18,35,70)
-    private val card = Color.rgb(61,82,120)
-    private val blue = Color.rgb(60,170,255)
-    private val yellow = Color.rgb(255,220,45)
+    private val bg = Color.rgb(18, 35, 70)
+    private val card = Color.rgb(61, 82, 120)
+    private val blue = Color.rgb(60, 170, 255)
+    private val yellow = Color.rgb(255, 220, 45)
     private val white = Color.WHITE
-    private val soft = Color.rgb(210,225,240)
+    private val soft = Color.rgb(210, 225, 240)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,14 +42,15 @@ class MainActivity : Activity() {
 
         val root = LinearLayout(this)
         root.orientation = LinearLayout.VERTICAL
-        root.setPadding(28,40,28,40)
+        root.setPadding(28, 40, 28, 40)
         root.setBackgroundColor(bg)
         root.gravity = Gravity.CENTER_HORIZONTAL
 
         val icon = ImageView(this)
         icon.setImageResource(R.mipmap.ic_launcher)
-        icon.layoutParams =
-            LinearLayout.LayoutParams(220,220)
+
+        val iconParams = LinearLayout.LayoutParams(220, 220)
+        icon.layoutParams = iconParams
 
         root.addView(icon)
         root.addView(title("SWIMTRACK"))
@@ -67,7 +68,6 @@ class MainActivity : Activity() {
         setContentView(scroll)
 
         showAtleta()
-
     }
 
     private fun buildTabs(root: LinearLayout) {
@@ -81,56 +81,93 @@ class MainActivity : Activity() {
         tabEvolucao = tab("EVOLUÇÃO")
         tabMais = tab("MAIS")
 
-        row.addView(tabAtleta,
-            LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,1f))
+        row.addView(
+            tabAtleta,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+        )
 
-        row.addView(tabTempos,
-            LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,1f))
+        row.addView(
+            tabTempos,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+        )
 
-        row.addView(tabTac,
-            LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,1f))
+        row.addView(
+            tabTac,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+        )
 
-        row.addView(tabEvolucao,
-            LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,1f))
+        row.addView(
+            tabEvolucao,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+        )
 
-        row.addView(tabMais,
-            LinearLayout.LayoutParams(0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,1f))
+        row.addView(
+            tabMais,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+        )
 
         root.addView(row)
 
-        tabAtleta.setOnClickListener { showAtleta() }
-        tabTempos.setOnClickListener { showTempos() }
-        tabTac.setOnClickListener { showTac() }
-        tabEvolucao.setOnClickListener { showEvolucao() }
-        tabMais.setOnClickListener { showMais() }
+        tabAtleta.setOnClickListener {
+            showAtleta()
+        }
 
+        tabTempos.setOnClickListener {
+            showTempos()
+        }
+
+        tabTac.setOnClickListener {
+            showTac()
+        }
+
+        tabEvolucao.setOnClickListener {
+            showEvolucao()
+        }
+
+        tabMais.setOnClickListener {
+            showMais()
+        }
     }
 
     private fun clearContent(active: TextView) {
 
         content.removeAllViews()
 
-        listOf(
+        val tabs = listOf(
             tabAtleta,
             tabTempos,
             tabTac,
             tabEvolucao,
             tabMais
-        ).forEach {
+        )
 
-            it.setBackgroundColor(card)
-            it.setTextColor(white)
-
+        for (t in tabs) {
+            t.setBackgroundColor(card)
+            t.setTextColor(white)
         }
 
         active.setBackgroundColor(yellow)
         active.setTextColor(bg)
-
     }
 
     private fun showAtleta() {
@@ -144,6 +181,7 @@ class MainActivity : Activity() {
         val esp = input("Especialidade", get("esp"))
 
         content.addView(section("PERFIL"))
+
         content.addView(nome)
         content.addView(clube)
         content.addView(id)
@@ -165,7 +203,6 @@ class MainActivity : Activity() {
                 "Perfil guardado.",
                 Toast.LENGTH_LONG
             ).show()
-
         })
 
         content.addView(button("🌐 ABRIR SWIMRANKINGS") {
@@ -173,19 +210,20 @@ class MainActivity : Activity() {
             val url =
                 "https://www.swimrankings.net/index.php?page=athleteDetail&athleteId=${id.text}"
 
-            val intent =
-                Intent(Intent.ACTION_VIEW,
-                    Uri.parse(url))
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(url)
+            )
 
             startActivity(intent)
-
         })
 
-        content.addView(info(
-            "Estado",
-            "Perfil guardado localmente."
-        ))
-
+        content.addView(
+            info(
+                "Estado",
+                "Perfil guardado localmente."
+            )
+        )
     }
 
     private fun showTempos() {
@@ -203,7 +241,9 @@ class MainActivity : Activity() {
         content.addView(button("📥 IMPORTAR / ATUALIZAR") {
 
             val novos =
-                extrairTempos(texto.text.toString())
+                extrairTempos(
+                    texto.text.toString()
+                )
 
             if (novos.isBlank()) {
 
@@ -237,9 +277,7 @@ class MainActivity : Activity() {
                 ).show()
 
                 showTempos()
-
             }
-
         })
 
         content.addView(section("MELHORES TEMPOS"))
@@ -269,13 +307,9 @@ class MainActivity : Activity() {
                             "Tempo: ${p[1]}"
                         )
                     )
-
                 }
-
             }
-
         }
-
     }
 
     private fun showTac() {
@@ -312,13 +346,9 @@ class MainActivity : Activity() {
                             )
                         )
                     )
-
                 }
-
             }
-
         }
-
     }
 
     private fun showEvolucao() {
@@ -340,7 +370,6 @@ class MainActivity : Activity() {
                 objetivo()
             )
         )
-
     }
 
     private fun showMais() {
@@ -350,17 +379,16 @@ class MainActivity : Activity() {
         content.addView(section("EXPORTAR"))
 
         content.addView(button("📤 WHATSAPP") {
-
             exportarWhatsApp()
-
         })
 
         content.addView(button("🗑 LIMPAR APP") {
 
-            prefs.edit().clear().apply()
+            prefs.edit()
+                .clear()
+                .apply()
 
             buildUI()
-
         })
 
         content.addView(
@@ -369,7 +397,6 @@ class MainActivity : Activity() {
                 disclaimer()
             )
         )
-
     }
 
     private fun extrairTempos(txt: String): String {
@@ -395,14 +422,19 @@ class MainActivity : Activity() {
             for ((origem, pt) in provas) {
 
                 if (
-                    linhas[i]
-                        .contains(origem,true)
+                    linhas[i].contains(
+                        origem,
+                        true
+                    )
                 ) {
 
                     val bloco =
                         linhas.subList(
                             i,
-                            minOf(i+8,linhas.size)
+                            minOf(
+                                i + 8,
+                                linhas.size
+                            )
                         ).joinToString(" ")
 
                     val tempo =
@@ -417,32 +449,29 @@ class MainActivity : Activity() {
                         resultados.add(
                             "$pt|$tempo"
                         )
-
                     }
-
                 }
-
             }
-
         }
 
         return resultados
             .distinct()
             .joinToString(";;")
-
     }
 
     private fun combinarTempos(
-        atuais:String,
-        novos:String
+        atuais: String,
+        novos: String
     ): String {
 
         val mapa =
-            mutableMapOf<String,String>()
+            mutableMapOf<String, String>()
 
-        fun add(lista:String) {
+        fun add(lista: String) {
 
-            if (lista.isBlank()) return
+            if (lista.isBlank()) {
+                return
+            }
 
             lista.split(";;").forEach {
 
@@ -453,8 +482,7 @@ class MainActivity : Activity() {
                     val prova = p[0]
                     val tempo = p[1]
 
-                    val antigo =
-                        mapa[prova]
+                    val antigo = mapa[prova]
 
                     if (
                         antigo == null ||
@@ -463,94 +491,92 @@ class MainActivity : Activity() {
                         tempoSeg(antigo)
                     ) {
 
-                        mapa[prova] =
-                            tempo
-
+                        mapa[prova] = tempo
                     }
-
                 }
-
             }
-
         }
 
         add(atuais)
         add(novos)
 
-        return mapa.entries
-            .joinToString(";;") {
-                "${it.key}|${it.value}"
-            }
-
+        return mapa.entries.joinToString(";;") {
+            "${it.key}|${it.value}"
+        }
     }
 
-    private fun tac(prova:String):String {
+    private fun tac(prova: String): String {
 
         return when {
 
             prova.contains(
-                "50 Livres",true
+                "50 Livres",
+                true
             ) -> "0:31.00"
 
             prova.contains(
-                "100 Livres",true
+                "100 Livres",
+                true
             ) -> "1:07.50"
 
             prova.contains(
-                "200 Livres",true
+                "200 Livres",
+                true
             ) -> "2:29.00"
 
             prova.contains(
-                "100 Mariposa",true
+                "100 Mariposa",
+                true
             ) -> "1:07.50"
 
             else -> ""
-
         }
-
     }
 
     private fun compararTac(
-        prova:String,
-        tempo:String
-    ):String {
+        prova: String,
+        tempo: String
+    ): String {
 
         val alvo =
-            tempoSeg(tac(prova))
+            tempoSeg(
+                tac(prova)
+            )
 
         val atual =
             tempoSeg(tempo)
 
-        if (alvo <= 0)
+        if (alvo <= 0) {
             return "TAC por definir"
+        }
 
         val dif = atual - alvo
 
-        return if (dif <= 0)
+        return if (dif <= 0) {
             "✅ TAC atingido"
-        else
-            "⏳ faltam %.2f s"
-                .format(dif)
-
+        } else {
+            "⏳ faltam %.2f s".format(dif)
+        }
     }
 
-    private fun analisar():String {
+    private fun analisar(): String {
 
         val tempos = get("tempos")
 
-        if (tempos.isBlank())
+        if (tempos.isBlank()) {
             return "Sem dados."
+        }
 
         return "A atleta apresenta evolução nas provas registadas. O SwimTrack identificou os TAC mais próximos automaticamente."
-
     }
 
-    private fun objetivo():String {
+    private fun objetivo(): String {
 
         val tempos = get("tempos")
 
-        if (tempos.isBlank())
+        if (tempos.isBlank()) {
             return "Importa tempos."
+        }
 
         var melhor = ""
         var difMin = 9999.0
@@ -561,32 +587,33 @@ class MainActivity : Activity() {
 
             if (p.size >= 2) {
 
-                val dif =
-                    tempoSeg(p[1]) -
-                            tempoSeg(tac(p[0]))
+                val alvo =
+                    tempoSeg(
+                        tac(p[0])
+                    )
 
-                if (
-                    dif < difMin &&
-                    tempoSeg(tac(p[0])) > 0
-                ) {
+                if (alvo > 0) {
 
-                    difMin = dif
-                    melhor = p[0]
+                    val dif =
+                        tempoSeg(p[1]) - alvo
 
+                    if (dif < difMin) {
+
+                        difMin = dif
+                        melhor = p[0]
+                    }
                 }
-
             }
-
         }
 
-        return if (melhor.isBlank())
+        return if (melhor.isBlank()) {
             "Sem TAC definidos."
-        else
+        } else {
             "Objetivo mais próximo: $melhor"
-
+        }
     }
 
-    private fun tempoSeg(t:String):Double {
+    private fun tempoSeg(t: String): Double {
 
         return try {
 
@@ -595,24 +622,20 @@ class MainActivity : Activity() {
 
             if (v.contains(":")) {
 
-                val p =
-                    v.split(":")
+                val p = v.split(":")
 
-                p[0].toDouble()*60 +
+                p[0].toDouble() * 60 +
                         p[1].toDouble()
 
             } else {
 
                 v.toDouble()
-
             }
 
-        } catch (e:Exception) {
+        } catch (e: Exception) {
 
             99999.0
-
         }
-
     }
 
     private fun exportarWhatsApp() {
@@ -639,27 +662,23 @@ class MainActivity : Activity() {
                 "Partilhar"
             )
         )
-
     }
 
-    private fun disclaimer():String {
+    private fun disclaimer(): String {
 
-        return
-        "SwimTrack é uma aplicação de uso pessoal.\n\n" +
+        return "SwimTrack é uma aplicação de uso pessoal.\n\n" +
                 "Sem ligação oficial à FPN, ANDL ou Swimrankings."
-
     }
 
-    private fun get(key:String):String {
+    private fun get(key: String): String {
 
         return prefs.getString(
             key,
             ""
         ) ?: ""
-
     }
 
-    private fun title(text:String):TextView {
+    private fun title(text: String): TextView {
 
         val t = TextView(this)
 
@@ -668,78 +687,88 @@ class MainActivity : Activity() {
         t.setTypeface(
             Typeface.DEFAULT_BOLD
         )
+
         t.setTextColor(white)
         t.gravity = Gravity.CENTER
 
         return t
-
     }
 
-    private fun subtitle(text:String):TextView {
+    private fun subtitle(text: String): TextView {
 
         val t = TextView(this)
 
         t.text = text
         t.textSize = 14f
+
         t.setTypeface(
             Typeface.DEFAULT_BOLD
         )
+
         t.setTextColor(soft)
         t.gravity = Gravity.CENTER
-        t.setPadding(0,8,0,24)
+        t.setPadding(0, 8, 0, 24)
 
         return t
-
     }
 
-    private fun section(text:String):TextView {
+    private fun section(text: String): TextView {
 
         val t = TextView(this)
 
         t.text = text
         t.textSize = 20f
+
         t.setTypeface(
             Typeface.DEFAULT_BOLD
         )
+
         t.setTextColor(yellow)
-        t.setPadding(0,30,0,12)
+        t.setPadding(0, 30, 0, 12)
 
         return t
-
     }
 
-    private fun tab(text:String):TextView {
+    private fun tab(text: String): TextView {
 
         val t = TextView(this)
 
         t.text = text
         t.gravity = Gravity.CENTER
         t.textSize = 12f
+
         t.setTypeface(
             Typeface.DEFAULT_BOLD
         )
+
         t.setTextColor(white)
         t.setBackgroundColor(card)
-        t.setPadding(8,14,8,14)
+        t.setPadding(8, 14, 8, 14)
 
         return t
-
     }
 
     private fun input(
-        hint:String,
-        value:String=""
-    ):EditText {
+        hint: String,
+        value: String = ""
+    ): EditText {
 
         val e = EditText(this)
 
         e.hint = hint
         e.setText(value)
         e.textSize = 16f
+
         e.setTextColor(white)
         e.setHintTextColor(soft)
         e.setBackgroundColor(card)
-        e.setPadding(22,16,22,16)
+
+        e.setPadding(
+            22,
+            16,
+            22,
+            16
+        )
 
         val lp =
             LinearLayout.LayoutParams(
@@ -747,17 +776,16 @@ class MainActivity : Activity() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
 
-        lp.setMargins(0,0,0,14)
+        lp.setMargins(0, 0, 0, 14)
 
         e.layoutParams = lp
 
         return e
-
     }
 
     private fun inputMulti(
-        hint:String
-    ):EditText {
+        hint: String
+    ): EditText {
 
         val e = input(hint)
 
@@ -765,29 +793,34 @@ class MainActivity : Activity() {
         e.gravity = Gravity.TOP
 
         return e
-
     }
 
     private fun button(
-        text:String,
-        action:()->Unit
-    ):Button {
+        text: String,
+        action: () -> Unit
+    ): Button {
 
         val b = Button(this)
 
         b.text = text
         b.textSize = 16f
+
         b.setTypeface(
             Typeface.DEFAULT_BOLD
         )
+
         b.setTextColor(Color.WHITE)
         b.setBackgroundColor(blue)
-        b.setPadding(20,18,20,18)
+
+        b.setPadding(
+            20,
+            18,
+            20,
+            18
+        )
 
         b.setOnClickListener {
-
             action()
-
         }
 
         val lp =
@@ -796,25 +829,29 @@ class MainActivity : Activity() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
 
-        lp.setMargins(0,0,0,18)
+        lp.setMargins(0, 0, 0, 18)
 
         b.layoutParams = lp
 
         return b
-
     }
 
     private fun info(
-        title:String,
-        body:String
-    ):LinearLayout {
+        title: String,
+        body: String
+    ): LinearLayout {
 
         val c = LinearLayout(this)
 
         c.orientation =
             LinearLayout.VERTICAL
 
-        c.setPadding(22,18,22,18)
+        c.setPadding(
+            22,
+            18,
+            22,
+            18
+        )
 
         c.setBackgroundColor(card)
 
@@ -822,9 +859,11 @@ class MainActivity : Activity() {
 
         t.text = title
         t.textSize = 18f
+
         t.setTypeface(
             Typeface.DEFAULT_BOLD
         )
+
         t.setTextColor(white)
 
         val b = TextView(this)
@@ -832,7 +871,13 @@ class MainActivity : Activity() {
         b.text = body
         b.textSize = 15f
         b.setTextColor(soft)
-        b.setPadding(0,8,0,0)
+
+        b.setPadding(
+            0,
+            8,
+            0,
+            0
+        )
 
         c.addView(t)
         c.addView(b)
@@ -843,12 +888,10 @@ class MainActivity : Activity() {
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
 
-        lp.setMargins(0,0,0,14)
+        lp.setMargins(0, 0, 0, 14)
 
         c.layoutParams = lp
 
         return c
-
     }
-
 }
