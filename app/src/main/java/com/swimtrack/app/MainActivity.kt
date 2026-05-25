@@ -30,14 +30,9 @@ class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         prefs = getSharedPreferences("swimtrack_prefs", MODE_PRIVATE)
 
-        if (prefs.getString("nome", "") == "") {
-            showSetupScreen()
-        } else {
-            showDashboard()
-        }
+        if (get("nome").isBlank()) showSetupScreen() else showDashboard()
     }
 
     private fun showSetupScreen() {
@@ -52,42 +47,29 @@ class MainActivity : Activity() {
         icon.setImageResource(resources.getIdentifier("ic_launcher", "mipmap", packageName))
         icon.layoutParams = LinearLayout.LayoutParams(220, 220)
 
-        val title = TextView(this)
-        title.text = "SWIMTRACK"
-        title.textSize = 34f
-        title.setTypeface(Typeface.DEFAULT_BOLD)
-        title.setTextColor(white)
-        title.gravity = Gravity.CENTER
-
-        val sub = TextView(this)
-        sub.text = "CONFIGURAÇÃO DO ATLETA"
-        sub.textSize = 15f
-        sub.setTypeface(Typeface.DEFAULT_BOLD)
-        sub.setTextColor(yellow)
-        sub.gravity = Gravity.CENTER
-        sub.setPadding(0, 8, 0, 24)
+        val title = title("SWIMTRACK")
+        val sub = subtitle("CONFIGURAÇÃO DO ATLETA")
 
         val nome = input("Nome do atleta")
         val clube = input("Clube")
-        val identificacao = input("N.º Identificação / Swimrankings")
-        val associacao = input("Associação", "ANDL")
+        val id = input("N.º Identificação / Swimrankings")
+        val assoc = input("Associação", "ANDL")
         val ano = input("Ano de nascimento")
         val sexo = input("Sexo")
         val resultados = input("Resultados relevantes")
-        val especialidade = input("Especialidade principal")
+        val esp = input("Especialidade principal")
 
         val guardar = actionButton("💾 Guardar atleta") {
             prefs.edit()
                 .putString("nome", nome.text.toString())
                 .putString("clube", clube.text.toString())
-                .putString("identificacao", identificacao.text.toString())
-                .putString("associacao", associacao.text.toString())
+                .putString("id", id.text.toString())
+                .putString("assoc", assoc.text.toString())
                 .putString("ano", ano.text.toString())
                 .putString("sexo", sexo.text.toString())
                 .putString("resultados", resultados.text.toString())
-                .putString("especialidade", especialidade.text.toString())
+                .putString("esp", esp.text.toString())
                 .apply()
-
             showDashboard()
         }
 
@@ -96,12 +78,12 @@ class MainActivity : Activity() {
         root.addView(sub)
         root.addView(nome)
         root.addView(clube)
-        root.addView(identificacao)
-        root.addView(associacao)
+        root.addView(id)
+        root.addView(assoc)
         root.addView(ano)
         root.addView(sexo)
         root.addView(resultados)
-        root.addView(especialidade)
+        root.addView(esp)
         root.addView(guardar)
 
         scroll.addView(root)
@@ -133,20 +115,9 @@ class MainActivity : Activity() {
         icon.setImageResource(resources.getIdentifier("ic_launcher", "mipmap", packageName))
         icon.layoutParams = LinearLayout.LayoutParams(220, 220)
 
-        val title = TextView(this)
-        title.text = "SWIMTRACK"
-        title.textSize = 34f
-        title.setTypeface(Typeface.DEFAULT_BOLD)
-        title.setTextColor(white)
-        title.gravity = Gravity.CENTER
-
-        val sub = TextView(this)
-        sub.text = "NATAÇÃO COMPETITIVA • TEMPOS • TAC"
-        sub.textSize = 14f
-        sub.setTypeface(Typeface.DEFAULT_BOLD)
-        sub.setTextColor(soft)
-        sub.gravity = Gravity.CENTER
-        sub.setPadding(0, 8, 0, 22)
+        content.addView(icon)
+        content.addView(title("SWIMTRACK"))
+        content.addView(subtitle("NATAÇÃO COMPETITIVA • TEMPOS • TAC"))
 
         val season = TextView(this)
         season.text = "🏊 ${get("nome")} • Época 2025/2026"
@@ -156,10 +127,6 @@ class MainActivity : Activity() {
         season.gravity = Gravity.CENTER
         season.setPadding(18, 12, 18, 12)
         season.setBackgroundColor(card)
-
-        content.addView(icon)
-        content.addView(title)
-        content.addView(sub)
         content.addView(season)
     }
 
@@ -191,54 +158,79 @@ class MainActivity : Activity() {
 
     private fun showAtleta() {
         clearPage(tabAtleta)
-
         content.addView(sectionTitle("ATLETA"))
         content.addView(infoCard("Nome", get("nome")))
         content.addView(infoCard("Clube", get("clube")))
-        content.addView(infoCard("N.º Identificação / Swimrankings", get("identificacao")))
-        content.addView(infoCard("Associação", get("associacao")))
+        content.addView(infoCard("N.º Identificação / Swimrankings", get("id")))
+        content.addView(infoCard("Associação", get("assoc")))
         content.addView(infoCard("Ano de nascimento", get("ano")))
         content.addView(infoCard("Sexo", get("sexo")))
         content.addView(infoCard("Escalão", calcularEscalao(get("ano"))))
         content.addView(infoCard("Resultados relevantes", get("resultados")))
-        content.addView(infoCard("Especialidade principal", get("especialidade")))
-
-        content.addView(actionButton("📥 Importar dados Swimrankings") {
-            Toast.makeText(this, "Próxima fase: ligação automática ao Swimrankings.", Toast.LENGTH_LONG).show()
-        })
+        content.addView(infoCard("Especialidade principal", get("esp")))
     }
 
     private fun showTempos() {
         clearPage(tabTempos)
+        content.addView(sectionTitle("TEMPOS MANUAIS"))
 
-        content.addView(sectionTitle("TEMPOS"))
-        content.addView(infoCard("Estado", "A aguardar importação Swimrankings."))
-        content.addView(infoCard("Resultados relevantes", get("resultados")))
-        content.addView(infoCard("Especialidade", get("especialidade")))
+        val prova = input("Prova. Ex: 100 Mariposa")
+        val tempo = input("Tempo. Ex: 1:08.42")
+        val data = input("Data / competição")
+
+        content.addView(prova)
+        content.addView(tempo)
+        content.addView(data)
+
+        content.addView(actionButton("➕ Adicionar tempo") {
+            val novo = "${prova.text}|${tempo.text}|${data.text}"
+            val atual = get("tempos")
+            prefs.edit().putString("tempos", if (atual.isBlank()) novo else "$atual;;$novo").apply()
+            showTempos()
+        })
+
+        content.addView(sectionTitle("REGISTOS"))
+        val tempos = get("tempos")
+        if (tempos.isBlank()) {
+            content.addView(infoCard("Sem tempos", "Ainda não foram adicionados tempos."))
+        } else {
+            tempos.split(";;").forEach {
+                val p = it.split("|")
+                if (p.size >= 3) content.addView(infoCard(p[0], "Tempo: ${p[1]}\nData/competição: ${p[2]}"))
+            }
+        }
     }
 
     private fun showTac() {
         clearPage(tabTac)
+        content.addView(sectionTitle("TAC BASE"))
 
-        content.addView(sectionTitle("TAC"))
-        content.addView(infoCard("Distritais", "Fonte prevista: ${get("associacao")}"))
-        content.addView(infoCard("Zonais", "Fonte prevista: regulamentos oficiais"))
-        content.addView(infoCard("Nacionais", "Fonte prevista: FPN"))
-        content.addView(infoCard("Comparação automática", "A app irá indicar quanto falta para cada TAC."))
+        val tempos = get("tempos")
+        if (tempos.isBlank()) {
+            content.addView(infoCard("Estado", "Adiciona primeiro tempos no separador Tempos."))
+        } else {
+            tempos.split(";;").forEach {
+                val p = it.split("|")
+                if (p.size >= 2) {
+                    val tac = tacBase(p[0])
+                    val dif = compararTempo(p[1], tac)
+                    content.addView(infoCard(p[0], "Tempo: ${p[1]}\nTAC base: $tac\nEstado: $dif"))
+                }
+            }
+        }
+
+        content.addView(infoCard("Fontes futuras", "TAC reais serão importados da ANDL, Zonais e FPN."))
     }
 
     private fun showEvolucao() {
         clearPage(tabEvolucao)
-
         content.addView(sectionTitle("EVOLUÇÃO"))
-        content.addView(infoCard("Histórico", "A aguardar importação de tempos."))
-        content.addView(infoCard("Objetivos", "TAC próximos, recordes próximos e provas prioritárias."))
-        content.addView(infoCard("Resultados relevantes", get("resultados")))
+        content.addView(infoCard("Histórico", get("tempos").ifBlank { "Ainda sem tempos registados." }))
+        content.addView(infoCard("Objetivos", "A app irá calcular melhorias, TAC próximos e recordes próximos."))
     }
 
     private fun showMais() {
         clearPage(tabMais)
-
         content.addView(sectionTitle("MAIS"))
 
         content.addView(actionButton("📤 Exportar WhatsApp") {
@@ -246,11 +238,10 @@ class MainActivity : Activity() {
                 "🏊‍♀️ SwimTrack\n" +
                 "Atleta: ${get("nome")}\n" +
                 "Clube: ${get("clube")}\n" +
-                "ID: ${get("identificacao")}\n" +
-                "Associação: ${get("associacao")}\n" +
+                "ID: ${get("id")}\n" +
+                "Associação: ${get("assoc")}\n" +
                 "Escalão: ${calcularEscalao(get("ano"))}\n\n" +
-                "Resultados relevantes: ${get("resultados")}\n" +
-                "Especialidade: ${get("especialidade")}\n\n" +
+                "Tempos:\n${formatarTempos()}\n\n" +
                 "Fontes: Swimrankings • ANDL • FPN"
 
             val intent = Intent(Intent.ACTION_SEND)
@@ -259,9 +250,7 @@ class MainActivity : Activity() {
             startActivity(Intent.createChooser(intent, "Partilhar"))
         })
 
-        content.addView(actionButton("✏️ Editar atleta") {
-            showSetupScreen()
-        })
+        content.addView(actionButton("✏️ Editar atleta") { showSetupScreen() })
 
         content.addView(actionButton("🗑 Limpar dados") {
             prefs.edit().clear().apply()
@@ -270,6 +259,45 @@ class MainActivity : Activity() {
 
         content.addView(infoCard("Segurança", "Uso pessoal. Sem login público. Sem servidor externo. Apenas INTERNET."))
         content.addView(infoCard("Disclaimer", disclaimer()))
+    }
+
+    private fun formatarTempos(): String {
+        val tempos = get("tempos")
+        if (tempos.isBlank()) return "Sem tempos registados."
+        return tempos.split(";;").joinToString("\n") {
+            val p = it.split("|")
+            if (p.size >= 3) "- ${p[0]}: ${p[1]} (${p[2]})" else ""
+        }
+    }
+
+    private fun tacBase(prova: String): String {
+        return when {
+            prova.contains("100", true) && prova.contains("Mariposa", true) -> "1:07.50"
+            prova.contains("200", true) && prova.contains("Livres", true) -> "2:29.00"
+            prova.contains("100", true) && prova.contains("Livres", true) -> "1:07.50"
+            else -> "Por importar"
+        }
+    }
+
+    private fun compararTempo(tempo: String, tac: String): String {
+        val t = tempoSeg(tempo)
+        val v = tempoSeg(tac)
+        if (t == null || v == null) return "TAC por importar"
+        val dif = t - v
+        return if (dif <= 0) "✅ TAC atingido" else "⏳ faltam %.2f s".format(dif)
+    }
+
+    private fun tempoSeg(t: String): Double? {
+        return try {
+            if (t.contains(":")) {
+                val p = t.split(":")
+                p[0].toDouble() * 60 + p[1].replace(",", ".").toDouble()
+            } else {
+                t.replace(",", ".").toDouble()
+            }
+        } catch (e: Exception) {
+            null
+        }
     }
 
     private fun input(hint: String, value: String = ""): EditText {
@@ -282,30 +310,44 @@ class MainActivity : Activity() {
         e.setBackgroundColor(card2)
         e.setPadding(22, 16, 22, 16)
 
-        val lp = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lp.setMargins(0, 0, 0, 14)
         e.layoutParams = lp
-
         return e
     }
 
-    private fun get(key: String): String {
-        return prefs.getString(key, "") ?: ""
-    }
+    private fun get(key: String): String = prefs.getString(key, "") ?: ""
 
     private fun calcularEscalao(anoTexto: String): String {
         val ano = anoTexto.toIntOrNull() ?: return "Por definir"
         val idade = 2026 - ano
-
         return when {
             idade <= 12 -> "Infantil"
             idade <= 16 -> "Juvenil"
             idade <= 18 -> "Júnior"
             else -> "Sénior"
         }
+    }
+
+    private fun title(text: String): TextView {
+        val t = TextView(this)
+        t.text = text
+        t.textSize = 34f
+        t.setTypeface(Typeface.DEFAULT_BOLD)
+        t.setTextColor(white)
+        t.gravity = Gravity.CENTER
+        return t
+    }
+
+    private fun subtitle(text: String): TextView {
+        val t = TextView(this)
+        t.text = text
+        t.textSize = 14f
+        t.setTypeface(Typeface.DEFAULT_BOLD)
+        t.setTextColor(soft)
+        t.gravity = Gravity.CENTER
+        t.setPadding(0, 8, 0, 22)
+        return t
     }
 
     private fun tab(text: String): TextView {
@@ -321,16 +363,11 @@ class MainActivity : Activity() {
     }
 
     private fun clearPage(active: TextView) {
-        while (content.childCount > 5) {
-            content.removeViewAt(5)
+        while (content.childCount > 5) content.removeViewAt(5)
+        listOf(tabAtleta, tabTempos, tabTac, tabEvolucao, tabMais).forEach {
+            it.setBackgroundColor(card2)
+            it.setTextColor(white)
         }
-
-        val tabs = listOf(tabAtleta, tabTempos, tabTac, tabEvolucao, tabMais)
-        for (t in tabs) {
-            t.setBackgroundColor(card2)
-            t.setTextColor(white)
-        }
-
         active.setBackgroundColor(yellow)
         active.setTextColor(bg)
     }
@@ -366,13 +403,9 @@ class MainActivity : Activity() {
         c.addView(t)
         c.addView(b)
 
-        val lp = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lp.setMargins(0, 0, 0, 14)
         c.layoutParams = lp
-
         return c
     }
 
@@ -386,13 +419,9 @@ class MainActivity : Activity() {
         b.setPadding(20, 18, 20, 18)
         b.setOnClickListener { action() }
 
-        val lp = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
+        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         lp.setMargins(0, 0, 0, 18)
         b.layoutParams = lp
-
         return b
     }
 
