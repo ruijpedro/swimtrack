@@ -13,115 +13,202 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val azulClaro = Color.rgb(190, 235, 255)
-        val azul = Color.rgb(45, 168, 255)
-        val azulEscuro = Color.rgb(0, 105, 180)
-        val texto = Color.rgb(16, 32, 51)
+        val bg = Color.rgb(21, 45, 78)
+        val card = Color.rgb(48, 70, 105)
+        val card2 = Color.rgb(61, 82, 120)
+        val blue = Color.rgb(80, 190, 255)
+        val yellow = Color.rgb(255, 220, 45)
+        val white = Color.WHITE
+        val soft = Color.rgb(200, 215, 235)
 
         val root = LinearLayout(this)
         root.orientation = LinearLayout.VERTICAL
-        root.setBackgroundColor(Color.WHITE)
-
-        val header = LinearLayout(this)
-        header.orientation = LinearLayout.VERTICAL
-        header.gravity = Gravity.CENTER
-        header.setPadding(30, 40, 30, 30)
-        header.setBackgroundColor(azulClaro)
-
-        val icon = ImageView(this)
-        icon.setImageResource(resources.getIdentifier("swimtrack_icon", "mipmap", packageName))
-        icon.layoutParams = LinearLayout.LayoutParams(180, 180)
-
-        val title = TextView(this)
-        title.text = "SwimTrack"
-        title.textSize = 32f
-        title.setTypeface(Typeface.DEFAULT_BOLD)
-        title.setTextColor(texto)
-        title.gravity = Gravity.CENTER
-
-        val subtitle = TextView(this)
-        subtitle.text = "Gestão pessoal de tempos de natação"
-        subtitle.textSize = 16f
-        subtitle.setTextColor(texto)
-        subtitle.gravity = Gravity.CENTER
-
-        header.addView(icon)
-        header.addView(title)
-        header.addView(subtitle)
+        root.setBackgroundColor(bg)
 
         val scroll = ScrollView(this)
         val content = LinearLayout(this)
         content.orientation = LinearLayout.VERTICAL
-        content.setPadding(24, 24, 24, 24)
+        content.setPadding(28, 40, 28, 30)
+        content.gravity = Gravity.CENTER_HORIZONTAL
 
-        content.addView(card("🏊 Perfil da atleta", "Nome: Constança\nEscalão: automático\nAssociação: ANDL", azulClaro, azulEscuro, texto))
-        content.addView(card("⏱ Tempos pessoais", "Registo dos melhores tempos por prova.\nLigação futura ao Swimrankings.", azulClaro, azulEscuro, texto))
-        content.addView(card("🎯 TAC", "Comparação com TAC Distritais, Zonais e Nacionais.\nFontes: ANDL e FPN.", azulClaro, azulEscuro, texto))
-        content.addView(card("📈 Evolução", "Histórico de melhoria por prova, piscina e época.", azulClaro, azulEscuro, texto))
+        val icon = ImageView(this)
+        icon.setImageResource(resources.getIdentifier("swimtrack_icon", "mipmap", packageName))
+        icon.layoutParams = LinearLayout.LayoutParams(220, 220)
 
-        content.addView(button("Partilhar resumo WhatsApp", azul) {
-            val textoPartilha =
-                "🏊‍♀️ SwimTrack\nAtleta: Constança\n\nTempos • TAC • Evolução\n\nFontes previstas: Swimrankings • ANDL • FPN"
+        val title = TextView(this)
+        title.text = "SWIMTRACK"
+        title.textSize = 34f
+        title.setTypeface(Typeface.DEFAULT_BOLD)
+        title.setTextColor(white)
+        title.gravity = Gravity.CENTER
+
+        val sub = TextView(this)
+        sub.text = "NATAÇÃO COMPETITIVA • TEMPOS • TAC"
+        sub.textSize = 14f
+        sub.setTypeface(Typeface.DEFAULT_BOLD)
+        sub.setTextColor(soft)
+        sub.gravity = Gravity.CENTER
+        sub.setPadding(0, 8, 0, 22)
+
+        val date = TextView(this)
+        date.text = "🏊 Constança • Época 2025/2026"
+        date.textSize = 16f
+        date.setTypeface(Typeface.DEFAULT_BOLD)
+        date.setTextColor(yellow)
+        date.gravity = Gravity.CENTER
+        date.setPadding(18, 12, 18, 12)
+        date.setBackgroundColor(card)
+
+        content.addView(icon)
+        content.addView(title)
+        content.addView(sub)
+        content.addView(date)
+
+        content.addView(tabs(yellow, card2, white))
+
+        content.addView(stats(card, white, soft))
+
+        content.addView(sectionTitle("ATLETA", yellow))
+        content.addView(infoCard("Nome", "Constança", card2, white, soft))
+        content.addView(infoCard("Clube", "A definir", card2, white, soft))
+        content.addView(infoCard("Associação", "ANDL — Associação de Natação do Distrito de Leiria", card2, white, soft))
+        content.addView(infoCard("Escalão", "Juvenil — cálculo automático pela idade", card2, white, soft))
+        content.addView(infoCard("Fontes", "Swimrankings • ANDL • FPN", card2, white, soft))
+
+        content.addView(sectionTitle("AÇÕES", yellow))
+
+        content.addView(actionButton("📤 Exportar resumo WhatsApp", blue) {
+            val msg = "🏊‍♀️ SwimTrack\nAtleta: Constança\nClube: A definir\nAssociação: ANDL\nEscalão: Juvenil\n\nTempos • TAC • Evolução\n\nFontes: Swimrankings • ANDL • FPN"
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
-            intent.putExtra(Intent.EXTRA_TEXT, textoPartilha)
+            intent.putExtra(Intent.EXTRA_TEXT, msg)
             startActivity(Intent.createChooser(intent, "Partilhar"))
         })
 
-        content.addView(card("⚠️ Disclaimer", disclaimer(), azulClaro, azulEscuro, texto))
+        content.addView(infoCard("Disclaimer", disclaimer(), card2, white, soft))
 
         scroll.addView(content)
-        root.addView(header)
         root.addView(scroll)
-
         setContentView(root)
     }
 
-    private fun card(titulo: String, corpo: String, fundo: Int, tituloCor: Int, textoCor: Int): LinearLayout {
-        val card = LinearLayout(this)
-        card.orientation = LinearLayout.VERTICAL
-        card.setPadding(24, 20, 24, 20)
-        card.setBackgroundColor(fundo)
+    private fun tabs(yellow: Int, card: Int, white: Int): LinearLayout {
+        val row = LinearLayout(this)
+        row.orientation = LinearLayout.HORIZONTAL
+        row.setPadding(0, 28, 0, 24)
 
+        val names = listOf("Atleta", "Tempos", "TAC", "Evolução", "Mais")
+
+        for (i in names.indices) {
+            val t = TextView(this)
+            t.text = names[i]
+            t.gravity = Gravity.CENTER
+            t.textSize = 13f
+            t.setTypeface(Typeface.DEFAULT_BOLD)
+            t.setTextColor(if (i == 0) Color.rgb(21, 45, 78) else white)
+            t.setBackgroundColor(if (i == 0) yellow else card)
+            t.setPadding(12, 14, 12, 14)
+
+            val lp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            lp.setMargins(3, 0, 3, 0)
+            row.addView(t, lp)
+        }
+
+        return row
+    }
+
+    private fun stats(card: Int, white: Int, soft: Int): LinearLayout {
+        val box = LinearLayout(this)
+        box.orientation = LinearLayout.HORIZONTAL
+        box.setPadding(12, 18, 12, 18)
+        box.setBackgroundColor(card)
+
+        box.addView(stat("3", "TEMPOS", white, soft), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        box.addView(stat("0", "TAC OK", white, soft), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        box.addView(stat("3", "OBJETIVOS", white, soft), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+
+        return box
+    }
+
+    private fun stat(num: String, label: String, white: Int, soft: Int): LinearLayout {
+        val l = LinearLayout(this)
+        l.orientation = LinearLayout.VERTICAL
+        l.gravity = Gravity.CENTER
+
+        val n = TextView(this)
+        n.text = num
+        n.textSize = 28f
+        n.setTypeface(Typeface.DEFAULT_BOLD)
+        n.setTextColor(white)
+        n.gravity = Gravity.CENTER
+
+        val s = TextView(this)
+        s.text = label
+        s.textSize = 12f
+        s.setTextColor(soft)
+        s.gravity = Gravity.CENTER
+
+        l.addView(n)
+        l.addView(s)
+        return l
+    }
+
+    private fun sectionTitle(text: String, color: Int): TextView {
         val t = TextView(this)
-        t.text = titulo
+        t.text = text
         t.textSize = 20f
         t.setTypeface(Typeface.DEFAULT_BOLD)
-        t.setTextColor(tituloCor)
+        t.setTextColor(color)
+        t.setPadding(0, 30, 0, 12)
+        return t
+    }
+
+    private fun infoCard(title: String, body: String, bg: Int, white: Int, soft: Int): LinearLayout {
+        val c = LinearLayout(this)
+        c.orientation = LinearLayout.VERTICAL
+        c.setPadding(22, 18, 22, 18)
+        c.setBackgroundColor(bg)
+
+        val t = TextView(this)
+        t.text = title
+        t.textSize = 18f
+        t.setTypeface(Typeface.DEFAULT_BOLD)
+        t.setTextColor(white)
 
         val b = TextView(this)
-        b.text = corpo
+        b.text = body
         b.textSize = 15f
-        b.setTextColor(textoCor)
-        b.setPadding(0, 10, 0, 0)
+        b.setTextColor(soft)
+        b.setPadding(0, 8, 0, 0)
 
-        card.addView(t)
-        card.addView(b)
+        c.addView(t)
+        c.addView(b)
 
         val lp = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        lp.setMargins(0, 0, 0, 22)
-        card.layoutParams = lp
+        lp.setMargins(0, 0, 0, 14)
+        c.layoutParams = lp
 
-        return card
+        return c
     }
 
-    private fun button(textoBotao: String, cor: Int, acao: () -> Unit): Button {
+    private fun actionButton(text: String, color: Int, action: () -> Unit): Button {
         val b = Button(this)
-        b.text = textoBotao
+        b.text = text
         b.textSize = 16f
+        b.setTypeface(Typeface.DEFAULT_BOLD)
         b.setTextColor(Color.WHITE)
-        b.setBackgroundColor(cor)
-        b.setPadding(16, 16, 16, 16)
-        b.setOnClickListener { acao() }
+        b.setBackgroundColor(color)
+        b.setPadding(20, 18, 20, 18)
+        b.setOnClickListener { action() }
         return b
     }
 
     private fun disclaimer(): String {
-        return "SwimTrack é uma aplicação de uso pessoal e académico destinada ao acompanhamento desportivo de atletas de natação.\n\n" +
-                "A aplicação não possui qualquer ligação oficial à FPN, ANDL ou Swimrankings.\n\n" +
-                "Os dados poderão ser consultados a partir de fontes públicas: Swimrankings, ANDL e FPN."
+        return "SwimTrack é uma aplicação de uso pessoal e académico.\n\n" +
+                "Não possui ligação oficial à FPN, ANDL ou Swimrankings.\n\n" +
+                "Dados previstos: Swimrankings, ANDL e FPN."
     }
 }
