@@ -278,7 +278,8 @@ class MainActivity : Activity() {
                 showTempos()
             }
         )
-    }    private fun showTempos() {
+    }
+        private fun showTempos() {
         clear(tabTempos)
 
         content.addView(
@@ -804,7 +805,8 @@ class MainActivity : Activity() {
             .apply()
 
         return contarTempos(melhores)
-    }    private fun importarPerfil(
+    }
+        private fun importarPerfil(
         texto: String
     ) {
         val linhas =
