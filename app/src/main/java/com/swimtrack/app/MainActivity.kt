@@ -54,8 +54,7 @@ class MainActivity : Activity() {
 
         val root = LinearLayout(this)
 
-        root.orientation =
-            LinearLayout.VERTICAL
+        root.orientation = LinearLayout.VERTICAL
 
         root.setPadding(
             28,
@@ -262,30 +261,6 @@ class MainActivity : Activity() {
                 "Resumo",
                 resumoAtleta()
             )
-        )
-
-        content.addView(
-            button(
-                "🌐 ABRIR SWIMRANKINGS"
-            ) {
-
-                val id =
-                    get("id")
-                        .ifBlank {
-                            "5631298"
-                        }
-
-                val url =
-                    "https://www.swimrankings.net/index.php?page=athleteDetail&athleteId=$id"
-
-                startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(url)
-                    )
-                )
-
-            }
         )
 
     }
@@ -554,13 +529,6 @@ class MainActivity : Activity() {
                     piscina == "50m"
             -> "1:07.50"
 
-            prova.contains(
-                "200 Livres",
-                true
-            ) &&
-                    piscina == "50m"
-            -> "2:29.00"
-
             else -> ""
 
         }
@@ -613,8 +581,7 @@ class MainActivity : Activity() {
 
         }
 
-        return
-        "${tempos.split(";;").size} tempos importados."
+        return "${tempos.split(";;").size} tempos importados."
 
     }
 
@@ -938,66 +905,7 @@ class MainActivity : Activity() {
 
         }
 
-        val lp =
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-
-        lp.setMargins(
-            0,
-            0,
-            0,
-            18
-        )
-
-        b.layoutParams = lp
-
         return b
-
-    }
-
-    private fun input(
-        hint: String
-    ): EditText {
-
-        val e =
-            EditText(this)
-
-        e.hint = hint
-
-        e.textSize = 15f
-
-        e.setTextColor(white)
-
-        e.setHintTextColor(soft)
-
-        e.setBackgroundColor(card)
-
-        e.setPadding(
-            22,
-            16,
-            22,
-            16
-        )
-
-        return e
-
-    }
-
-    private fun inputMulti(
-        hint: String
-    ): EditText {
-
-        val e =
-            input(hint)
-
-        e.minLines = 12
-
-        e.gravity =
-            Gravity.TOP
-
-        return e
 
     }
 
@@ -1054,29 +962,13 @@ class MainActivity : Activity() {
 
         c.addView(b)
 
-        val lp =
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-
-        lp.setMargins(
-            0,
-            0,
-            0,
-            14
-        )
-
-        c.layoutParams = lp
-
         return c
 
     }
 
     private fun disclaimer(): String {
 
-        return
-        "SwimTrack é uma aplicação de uso pessoal e académico.\n\n" +
+        return "SwimTrack é uma aplicação de uso pessoal e académico.\n\n" +
                 "Sem ligação oficial à FPN, ANDL ou Swimrankings."
 
     }
